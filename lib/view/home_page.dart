@@ -1,8 +1,6 @@
 import 'package:currencyapp/data/repository/repository.dart';
 import 'package:currencyapp/provider/home_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
@@ -28,21 +26,38 @@ class _HomePageState extends State<HomePage> {
 
   Scaffold _scaffold() {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("NBU"),
+      
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              flex: 2,
+              child: Container(
+              height: double.infinity,
+              width: double.infinity,
+              color: Colors.amber,)),
+            const Divider(),
+            Expanded(
+              flex: 8,
+              child: Builder(builder: (context) {
+                if (context.watch<HomeProvider>().isLoading) {
+                  return const Center(child: CircularProgressIndicator(),);
+                }else if(context.watch<HomeProvider>().error.isNotEmpty){
+                  String bug=context.watch<HomeProvider>().error;
+                  return Center(child: Text(bug.toString()),);
+                } else {
+                  Box<CurrencyModel> data=RepositoryCurrency.currencyBox!;
+                  return ListView.builder(
+                    itemCount: data.length,
+                    itemBuilder: (context, index) {
+                    return ListTile(title: Text(data.getAt(index)!.title.toString()),);
+                  },);
+                }
+              },),
+            ),
+          ],
+        ),
       ),
-      body: Builder(builder: (context) {
-        if (context.watch<HomeProvider>().isLoading) {
-          return const Center(child: CircularProgressIndicator(),);
-        } else {
-          Box<CurrencyModel> data=RepositoryCurrency.currencyBox!;
-          return ListView.builder(
-            itemCount: data.length,
-            itemBuilder: (context, index) {
-            return ListTile(title: Text(data.getAt(index)!.title.toString()),);
-          },);
-        }
-      },),
     );
   }
 }
