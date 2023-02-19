@@ -1,5 +1,8 @@
+import 'package:currencyapp/core/widgets/loading_widget.dart';
 import 'package:currencyapp/data/repository/repository.dart';
+import 'package:currencyapp/data/service/service_currency.dart';
 import 'package:currencyapp/provider/home_provider.dart';
+import 'package:currencyapp/view/info_page.dart';
 import 'package:currencyapp/view/screens/search_delegate.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -82,29 +85,37 @@ class _HomePageState extends State<HomePage> {
                 child: const Text("Search")),
             Expanded(
               flex: 8,
-              child: Builder(
-                builder: (context) {
-                  if (context.watch<HomeProvider>().isLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (context.watch<HomeProvider>().error.isNotEmpty) {
-                    String bug = context.watch<HomeProvider>().error;
-                    return Center(
-                      child: Text(bug.toString()),
-                    );
-                  } else {
-                    Box<CurrencyModel> data = RepositoryCurrency.currencyBox!;
-                    return ListView.builder(
-                      itemCount: data.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(data.getAt(index)!.title.toString()),
-                        );
-                      },
-                    );
-                  }
-                },
+              child: RefreshIndicator(
+                onRefresh: GetCurrencyService().getCurrency,
+                child: Builder(
+                  builder: (context) {
+                    if (context.watch<HomeProvider>().isLoading) {
+                      return const Center(
+                        child: LoadingWidget(),
+                      );
+                    } else if (context.watch<HomeProvider>().error.isNotEmpty) {
+                      String bug = context.watch<HomeProvider>().error;
+                      return Center(
+                        child: Text(bug.toString()),
+                      );
+                    } else {
+                      Box<CurrencyModel> data = RepositoryCurrency.currencyBox!;
+                      return ListView.builder(
+                        itemCount: data.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            child: ListTile(
+                              onTap: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => InfoPage(data: data.getAt(index)!),));
+                              },
+                              title: Text(data.getAt(index)!.title.toString(),style: const TextStyle(fontFamily: 'Cinzel',fontWeight: FontWeight.bold),),
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  },
+                ),
               ),
             ),
           ],
