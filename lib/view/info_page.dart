@@ -83,7 +83,7 @@ class InfoPage extends StatelessWidget {
                       ),
                     ],
                       fontFamily: 'Cinzel',
-                      fontSize: 70,
+                      fontSize: 60,
                     ),
                   ),
                   const Text(

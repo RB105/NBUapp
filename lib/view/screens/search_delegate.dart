@@ -2,6 +2,8 @@ import 'package:currencyapp/data/model/model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
+import '../info_page.dart';
+
 class MySearchDelegate extends SearchDelegate {
   final Box<CurrencyModel> box;
 
@@ -44,7 +46,10 @@ class MySearchDelegate extends SearchDelegate {
       itemCount: results.length,
       itemBuilder: (context, index) {
         return ListTile(
-          title: Text(results[index].title.toString()),
+          onTap: (){
+             Navigator.push(context, MaterialPageRoute(builder: (context) => InfoPage(data: results[index]),));
+          },
+          title: Text(results[index].title.toString(),style: const TextStyle(fontFamily: 'Cinzel',fontWeight: FontWeight.bold)),
         );
       },
     );

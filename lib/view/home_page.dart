@@ -106,9 +106,9 @@ class _HomePageState extends State<HomePage> {
                           return Card(
                             child: ListTile(
                               onTap: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => InfoPage(data: data.getAt(index)!),));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => InfoPage(data: data.getAt(index)!)));
                               },
-                              title: Text(data.getAt(index)!.title.toString(),style: const TextStyle(fontFamily: 'Cinzel',fontWeight: FontWeight.bold),),
+                              title: Text(data.getAt(index)!.title.toString(),style: const TextStyle(fontFamily: 'Cinzel',fontWeight: FontWeight.bold)),
                             ),
                           );
                         },
